@@ -27,6 +27,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Integer id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
