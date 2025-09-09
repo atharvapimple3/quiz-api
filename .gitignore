@@ -1,0 +1,87 @@
+# === Java build output ===
+target/
+bin/
+out/
+build/
+
+# === Maven wrapper ===
+.mvn/
+!**/.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# === VS Code ===
+.vscode/
+
+# === Eclipse ===
+.project
+.classpath
+.csettings/
+.settings/
+
+# === OS-generated files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === Logs ===
+*.log
+*.log.*
+
+# === Runtime & temporary files ===
+*.tmp
+*.swp
+*.bak
+*.swo
+*.orig
+
+# === Environment configuration ===
+.env
+.env.*
+application.yml
+*.local
+
+# === Compiled files ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Test reports ===
+test-output/
+surefire-reports/
+jacoco.exec
+coverage/
+
+# === Node.js (for frontend if using) ===
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# === Package manager ===
+package-lock.json
+yarn.lock
+
+# === Misc ===
+.idea_modules/
+atlassian-ide-plugin.xml
+target-site/
+
+# === JetBrains Rider ===
+.idea/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/shelf/
+
+# === Local development config ===
+*.launch
+*.code-workspace
