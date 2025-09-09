@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class QuizServiceImpl implements QuizService{
+public class QuizServiceImpl implements QuizService {
 
     QuizRepo quizRepo;
 
@@ -24,8 +24,8 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public Quiz updateQuiz(Integer id, Quiz quiz) {
-        Quiz existingQuiz = quizRepo.findById(id).orElseThrow(() ->{
-            return new RuntimeException("Quiz not found with ID: "+ id);
+        Quiz existingQuiz = quizRepo.findById(id).orElseThrow(() -> {
+            return new RuntimeException("Quiz not found with ID: " + id);
         });
         existingQuiz.setCategory(quiz.getCategory());
         existingQuiz.setTitle(quiz.getTitle());
@@ -34,13 +34,13 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public Quiz patchQuiz(Integer id, Quiz quiz) {
-        Quiz existingQuiz = quizRepo.findById(id).orElseThrow(() ->{
-            return new RuntimeException("Quiz not found with ID: "+ id);
+        Quiz existingQuiz = quizRepo.findById(id).orElseThrow(() -> {
+            return new RuntimeException("Quiz not found with ID: " + id);
         });
-        if(quiz.getCategory() != null){
+        if (quiz.getCategory() != null) {
             existingQuiz.setCategory(quiz.getCategory());
         }
-        if(quiz.getTitle() != null){
+        if (quiz.getTitle() != null) {
             existingQuiz.setTitle(quiz.getTitle());
         }
         return quizRepo.save(existingQuiz);
@@ -54,7 +54,7 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public void deleteQuiz(Integer id) {
-        Quiz quiz = quizRepo.findById(id).orElseThrow(() ->{
+        Quiz quiz = quizRepo.findById(id).orElseThrow(() -> {
             return new RuntimeException("Quiz not found with ID :" + id);
         });
         quiz.setIsDeleted(true);
@@ -63,9 +63,15 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public Quiz getQuizById(Integer id) {
-        Quiz quiz = quizRepo.findByIdAndIsDeletedFalse(id).orElseThrow(() ->{
-            return new RuntimeException("Quiz not found with ID: "+ id);
+        Quiz quiz = quizRepo.findByIdAndIsDeletedFalse(id).orElseThrow(() -> {
+            return new RuntimeException("Quiz not found with ID: " + id);
         });
         return quiz;
+    }
+
+    @Override
+    public void restoreById(Integer id) {
+        Quiz quiz = quizRepo.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found with ID:" + id));
+        quizRepo.restoreById(id);
     }
 }

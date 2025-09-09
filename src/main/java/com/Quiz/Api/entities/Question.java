@@ -1,7 +1,10 @@
 package com.Quiz.Api.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 
@@ -16,18 +19,22 @@ public class Question {
 
 
     @ManyToOne
-    @JoinColumn(name = "quiz_id" )
+    @JoinColumn(name = "quiz_id")
     @JsonBackReference
     private Quiz quiz;
 
     @Column(name = "question")
     private String question;
 
+    @Type(JsonType.class)
     @Column(columnDefinition = "json", name = "options")
     private List<String> options;
 
     @Column(name = "correct_answer")
     private String correctAnswer;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 
     public Question() {
 
@@ -39,6 +46,14 @@ public class Question {
         this.question = question;
         this.options = options;
         this.correctAnswer = correctAnswer;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public int getId() {

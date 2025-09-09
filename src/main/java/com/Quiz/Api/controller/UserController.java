@@ -66,5 +66,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PatchMapping("/users/restore/{id}")
+    public ResponseEntity<Void> restoreUser(@PathVariable Integer id) {
+        userService.restoreById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 
 }

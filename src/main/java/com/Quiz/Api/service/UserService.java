@@ -18,5 +18,7 @@ public interface UserService {
 
     User patchUser(Integer id, User user);
 
+    void restoreById(Integer id);
+
 
 }
