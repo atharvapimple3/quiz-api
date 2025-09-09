@@ -2,8 +2,11 @@ package com.Quiz.Api.repository;
 
 import com.Quiz.Api.entities.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,5 +18,10 @@ public interface QuizRepo extends JpaRepository<Quiz, Integer> {
     List<Quiz> getActiveQuiz();
 
     Optional<Quiz> findByIdAndIsDeletedFalse(Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("Update Quiz q set q.isDeleted = false where q.id = :id")
+    void restoreById(@Param("id") Integer id);
 
 }

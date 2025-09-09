@@ -56,4 +56,10 @@ public class QuizController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PatchMapping("/restore/{id}")
+    public ResponseEntity<Quiz> restoreQuiz(@PathVariable Integer id){
+        quizService.restoreById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

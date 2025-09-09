@@ -91,4 +91,12 @@ public class UserServiceImpl implements UserService {
         log.info("User patched with ID: {}", id);
         return updated;
     }
+
+    @Override
+    public void restoreById(Integer id) {
+        User user = userRepo.findById(id).orElseThrow(() ->{
+            throw new RuntimeException("User not found with ID: "+ id);
+        });
+        userRepo.restoreById(id);
+    }
 }

@@ -18,4 +18,6 @@ public interface QuizService {
 
     Quiz getQuizById(Integer id);
 
+    void restoreById(Integer id);
+
 }
