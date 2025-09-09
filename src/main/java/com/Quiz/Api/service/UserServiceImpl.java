@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer id) {
         log.info("Getting user with ID: {}", id);
-        return userRepo.findById(id).orElseThrow(() ->
+        return userRepo.findByIdAndIsDeletedFalse(id).orElseThrow(() ->
                 new RuntimeException("No user with ID :" + id));
     }
 

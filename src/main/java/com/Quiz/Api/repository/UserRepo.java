@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
@@ -15,5 +16,7 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 
     @Query("Select u from User u where u.isDeleted = false")
     List<User> getActiveUsers();
+
+    Optional<User> findByIdAndIsDeletedFalse(Integer id);
 
 }
