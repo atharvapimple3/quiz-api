@@ -1,8 +1,11 @@
 package com.Quiz.Api.entities;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "attempt")
@@ -13,11 +16,11 @@ public class Attempt {
     @Column(name = "id")
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
@@ -33,11 +36,15 @@ public class Attempt {
     @Column(name = "time_taken")
     private LocalDateTime timeTaken;
 
+    @Type(JsonType.class)
+    @Column(name = "question_ids", columnDefinition = "json")
+    private List<Integer> questionIds;
+
     public Attempt() {
 
     }
 
-    public Attempt(int id, User user, Quiz quiz, int score, LocalDateTime completedAt, LocalDateTime startedAt, LocalDateTime timeTaken) {
+    public Attempt(int id, User user, Quiz quiz, int score, LocalDateTime completedAt, LocalDateTime startedAt, LocalDateTime timeTaken, List<Integer> questionIds) {
         this.id = id;
         this.user = user;
         this.quiz = quiz;
@@ -45,6 +52,7 @@ public class Attempt {
         this.completedAt = completedAt;
         this.startedAt = startedAt;
         this.timeTaken = timeTaken;
+        this.questionIds = questionIds;
     }
 
     public int getId() {
@@ -101,6 +109,14 @@ public class Attempt {
 
     public void setTimeTaken(LocalDateTime timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    public List<Integer> getQuestionIds() {
+        return questionIds;
+    }
+
+    public void setQuestionIds(List<Integer> questionIds) {
+        this.questionIds = questionIds;
     }
 
     @Override
