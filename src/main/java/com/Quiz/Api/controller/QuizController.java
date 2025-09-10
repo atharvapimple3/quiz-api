@@ -1,6 +1,12 @@
 package com.Quiz.Api.controller;
 
+import com.Quiz.Api.dto.LeaderboardDTO;
+import com.Quiz.Api.dto.QuestionDTO;
+import com.Quiz.Api.dto.QuizSubmissionDto;
+import com.Quiz.Api.entities.Attempt;
+import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
+import com.Quiz.Api.service.QuestionService;
 import com.Quiz.Api.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,16 +14,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/quiz")
 public class QuizController {
 
     QuizService quizService;
+    QuestionService questionService;
 
     @Autowired
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, QuestionService questionService) {
         this.quizService = quizService;
+        this.questionService = questionService;
     }
 
     @GetMapping()
@@ -57,9 +66,37 @@ public class QuizController {
     }
 
     @PatchMapping("/restore/{id}")
-    public ResponseEntity<Quiz> restoreQuiz(@PathVariable Integer id){
+    public ResponseEntity<Quiz> restoreQuiz(@PathVariable Integer id) {
         quizService.restoreById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/{quizId}/start")
+    public ResponseEntity<Map<String, Object>> getQuestionsForQuiz(@PathVariable Integer quizId) {
+        Map<String, Object> quiz = quizService.startQuiz(quizId);
+        return ResponseEntity.status(HttpStatus.OK).body(quiz);
+    }
+
+//    @GetMapping("/{quizId}/start/{index}")
+//    public ResponseEntity<Question> getOneQuestion(@PathVariable Integer quizId, @PathVariable Integer index) {
+//
+//        List<Question> questions = questionService.getRandomQuestionsForQuiz(quizId);
+//
+//        Question currentQuestion = questionService.getOneQuestion(questions, index);
+//        return ResponseEntity.status(HttpStatus.OK).body(currentQuestion);
+//    }
+
+    @PostMapping("/{quizId}/submit/{attemptId}")
+    public ResponseEntity<String> quizSubmission(@RequestBody QuizSubmissionDto quizSubmissionDto, @PathVariable Integer attemptId) {
+        String score = quizService.submitQuiz(quizSubmissionDto, attemptId);
+        return ResponseEntity.status(HttpStatus.OK).body(score);
+    }
+
+    @GetMapping("/leader-board/{quizId}")
+    public ResponseEntity<List<LeaderboardDTO>> getLeaderboardForQuiz(@PathVariable Integer quizId){
+        List<LeaderboardDTO> leaderboard = quizService.leaderBoardForQuiz(quizId);
+        return ResponseEntity.status(HttpStatus.OK).body(leaderboard);
+    }
+
 
 }

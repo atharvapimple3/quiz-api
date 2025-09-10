@@ -24,7 +24,7 @@ public class Quiz {
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
     @JsonManagedReference
     List<Question> questions = new ArrayList<>();
 

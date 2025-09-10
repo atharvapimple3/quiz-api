@@ -1,8 +1,14 @@
 package com.Quiz.Api.service;
 
+import com.Quiz.Api.dto.LeaderboardDTO;
+import com.Quiz.Api.dto.QuestionDTO;
+import com.Quiz.Api.dto.QuizSubmissionDto;
+import com.Quiz.Api.entities.Attempt;
+import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
 
 import java.util.List;
+import java.util.Map;
 
 public interface QuizService {
 
@@ -19,5 +25,13 @@ public interface QuizService {
     Quiz getQuizById(Integer id);
 
     void restoreById(Integer id);
+
+    Question getOneQuestion(List<Integer> randomQuestionsByIndex, Integer index);
+
+    String submitQuiz(QuizSubmissionDto quizSubmissionDto, Integer attemptId);
+
+    Map<String, Object> startQuiz(Integer quizId);
+
+    List<LeaderboardDTO> leaderBoardForQuiz(Integer quizId);
 
 }

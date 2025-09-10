@@ -15,4 +15,9 @@ public interface QuestionRepo extends JpaRepository<Question, Integer> {
     List<Question> getAllActiveQuestions();
 
     Optional<Question> findByIdAndIsDeletedFalse(Integer id);
+
+    @Query(value = "Select * from question where quiz_id = :quizId and is_deleted = false order by rand() limit 10", nativeQuery = true)
+    List<Question> randomQuestionsByQuizId(Integer quizId);
+
+    List<Integer> findQuestionIdsByQuizId(Integer quizId);
 }

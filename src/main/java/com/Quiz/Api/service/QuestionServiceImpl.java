@@ -1,7 +1,11 @@
 package com.Quiz.Api.service;
 
+import com.Quiz.Api.dto.AnswerDto;
+import com.Quiz.Api.dto.QuestionDTO;
+import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.repository.QuestionRepo;
+import com.Quiz.Api.repository.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +15,12 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
 
     QuestionRepo questionRepo;
+    QuizRepo quizRepo;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepo questionRepo) {
+    public QuestionServiceImpl(QuestionRepo questionRepo, QuizRepo quizRepo) {
         this.questionRepo = questionRepo;
+        this.quizRepo = quizRepo;
     }
 
     @Override
