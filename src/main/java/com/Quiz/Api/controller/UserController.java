@@ -1,5 +1,7 @@
 package com.Quiz.Api.controller;
 
+import com.Quiz.Api.dto.AttemptHistoryDto;
+import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.User;
 import com.Quiz.Api.service.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -21,19 +24,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userService.getUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PostMapping("/users")
+    @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             throw new RuntimeException("Cannot add user");
@@ -42,7 +45,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             throw new RuntimeException("Validation failed for user with ID: " + id);
@@ -51,7 +54,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<User> patchUser(@PathVariable Integer id, @Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             throw new RuntimeException("Validation failed for user with ID: " + id);
@@ -60,16 +63,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(patched);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping("/users/restore/{id}")
+    @PatchMapping("/restore/{id}")
     public ResponseEntity<Void> restoreUser(@PathVariable Integer id) {
         userService.restoreById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<AttemptHistoryDto>> getUserAttempts(@PathVariable Integer userId){
+        List<AttemptHistoryDto> attemptsByUser = userService.getUserHistoryOfAttempts(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(attemptsByUser);
     }
 
 

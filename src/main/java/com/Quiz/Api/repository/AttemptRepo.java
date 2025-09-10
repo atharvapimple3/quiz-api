@@ -12,4 +12,6 @@ public interface AttemptRepo extends JpaRepository<Attempt, Integer> {
 
     List<Attempt> findTop10ByQuiz_IdOrderByScoreDesc(Integer quizId);
 
+    List<Attempt> findAllByUser_Id(Integer userId);
+
 }
