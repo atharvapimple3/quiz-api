@@ -1,9 +1,7 @@
 package com.Quiz.Api.service;
 
-import com.Quiz.Api.dto.LeaderboardDTO;
-import com.Quiz.Api.dto.QuestionDTO;
+import com.Quiz.Api.dto.LeaderboardDto;
 import com.Quiz.Api.dto.QuizSubmissionDto;
-import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
 
@@ -32,6 +30,6 @@ public interface QuizService {
 
     Map<String, Object> startQuiz(Integer quizId);
 
-    List<LeaderboardDTO> leaderBoardForQuiz(Integer quizId);
+    List<LeaderboardDto> leaderBoardForQuiz(Integer quizId);
 
 }

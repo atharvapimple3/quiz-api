@@ -26,4 +26,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     @Query("Update User u set u.isDeleted = false where u.id = :id")
     void restoreById(@Param("id") Integer id);
 
+    Optional<User> findByEmail(String email);
+
 }

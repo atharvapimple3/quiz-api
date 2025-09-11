@@ -1,6 +1,6 @@
 package com.Quiz.Api.dto;
 
-public class LeaderboardDTO {
+public class LeaderboardDto {
 
     private int userId;
     private String name;
@@ -9,10 +9,10 @@ public class LeaderboardDTO {
     private String title;
     private int quizId;
 
-    public LeaderboardDTO() {
+    public LeaderboardDto() {
     }
 
-    public LeaderboardDTO(int userId, String name, String email, int score, String title, int quizId) {
+    public LeaderboardDto(int userId, String name, String email, int score, String title, int quizId) {
         this.userId = userId;
         this.name = name;
         this.email = email;

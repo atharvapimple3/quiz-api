@@ -1,8 +1,5 @@
 package com.Quiz.Api.service;
 
-import com.Quiz.Api.dto.AnswerDto;
-import com.Quiz.Api.dto.QuestionDTO;
-import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.repository.QuestionRepo;
 import com.Quiz.Api.repository.QuizRepo;

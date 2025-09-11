@@ -1,8 +1,8 @@
 package com.Quiz.Api.service;
 
 import com.Quiz.Api.dto.AnswerDto;
-import com.Quiz.Api.dto.LeaderboardDTO;
-import com.Quiz.Api.dto.QuestionDTO;
+import com.Quiz.Api.dto.LeaderboardDto;
+import com.Quiz.Api.dto.QuestionDto;
 import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.Question;
@@ -98,8 +98,8 @@ public class QuizServiceImpl implements QuizService {
         List<Question> randomQuestionsForQuiz = questionRepo.randomQuestionsByQuizId(quizId);
 
 
-        List<QuestionDTO> questionDTOs = randomQuestionsForQuiz.stream()
-                .map(q -> new QuestionDTO(q.getId(), q.getQuestion(), q.getOptions()))
+        List<QuestionDto> questionDtos = randomQuestionsForQuiz.stream()
+                .map(q -> new QuestionDto(q.getId(), q.getQuestion(), q.getOptions()))
                 .toList();
 
         List<Integer> questionIds = randomQuestionsForQuiz
@@ -116,7 +116,7 @@ public class QuizServiceImpl implements QuizService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("Attempt ID:", attempt.getId());
-        map.put("Questions", questionDTOs);
+        map.put("Questions", questionDtos);
 
         return map;
     }
@@ -168,17 +168,17 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public List<LeaderboardDTO> leaderBoardForQuiz(Integer quizId) {
+    public List<LeaderboardDto> leaderBoardForQuiz(Integer quizId) {
         List<Attempt> attempts = attemptRepo.findTop10ByQuiz_IdOrderByScoreDescTimeTakenAsc(quizId);
 
         if (attempts.isEmpty()) {
             throw new RuntimeException("Not enough attempts");
         }
 
-        List<LeaderboardDTO> leaderBoard = new ArrayList<>();
+        List<LeaderboardDto> leaderBoard = new ArrayList<>();
 
         for (Attempt a : attempts) {
-            LeaderboardDTO leaderboardDTO = new LeaderboardDTO();
+            LeaderboardDto leaderboardDTO = new LeaderboardDto();
             leaderboardDTO.setScore(a.getScore());
             leaderboardDTO.setQuizId(a.getQuiz().getId());
             leaderboardDTO.setEmail(a.getUser().getEmail());
