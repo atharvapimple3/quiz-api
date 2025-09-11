@@ -1,7 +1,5 @@
 package com.Quiz.Api.service;
 
-import com.Quiz.Api.dto.QuestionDTO;
-import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Question;
 
 import java.util.List;

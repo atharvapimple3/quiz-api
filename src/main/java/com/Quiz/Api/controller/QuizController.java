@@ -1,6 +1,6 @@
 package com.Quiz.Api.controller;
 
-import com.Quiz.Api.dto.LeaderboardDTO;
+import com.Quiz.Api.dto.LeaderboardDto;
 import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Quiz;
 import com.Quiz.Api.service.QuestionService;
@@ -90,8 +90,8 @@ public class QuizController {
     }
 
     @GetMapping("/leader-board/{quizId}")
-    public ResponseEntity<List<LeaderboardDTO>> getLeaderboardForQuiz(@PathVariable Integer quizId){
-        List<LeaderboardDTO> leaderboard = quizService.leaderBoardForQuiz(quizId);
+    public ResponseEntity<List<LeaderboardDto>> getLeaderboardForQuiz(@PathVariable Integer quizId){
+        List<LeaderboardDto> leaderboard = quizService.leaderBoardForQuiz(quizId);
         return ResponseEntity.status(HttpStatus.OK).body(leaderboard);
     }
 

@@ -1,16 +1,14 @@
 package com.Quiz.Api.dto;
 
-import com.Quiz.Api.entities.Question;
-
 import java.util.*;
 
-public class QuestionDTO {
+public class QuestionDto {
 
     private int id;
     private String question;
     private List<String> options;
 
-    public QuestionDTO(Integer id, String question, List<String> options) {
+    public QuestionDto(Integer id, String question, List<String> options) {
         this.id = id;
         this.question = question;
         this.options = new ArrayList<>(options);

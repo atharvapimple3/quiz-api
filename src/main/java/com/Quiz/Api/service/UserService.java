@@ -24,5 +24,6 @@ public interface UserService {
 
     List<AttemptHistoryDto> getUserHistoryOfAttempts(Integer userId);
 
+    User findByEmail(String email);
 
 }
