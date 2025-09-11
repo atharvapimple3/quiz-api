@@ -13,6 +13,7 @@ import com.Quiz.Api.repository.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +108,7 @@ public class QuizServiceImpl implements QuizService {
                 .toList();
 
         Attempt attempt = new Attempt();
-//        attempt.setUser(user);
+//        attempt.setUser();
         attempt.setQuestionIds(questionIds);
         attempt.setStartedAt(LocalDateTime.now());
         attempt.setQuiz(randomQuestionsForQuiz.getFirst().getQuiz());
@@ -144,7 +145,7 @@ public class QuizServiceImpl implements QuizService {
         Integer score = 0;
 
         for (AnswerDto ans : answers) {
-            if(!attempt.getQuestionIds().contains(ans.getQuestionId())){
+            if (!attempt.getQuestionIds().contains(ans.getQuestionId())) {
                 continue;
             }
 
@@ -158,22 +159,25 @@ public class QuizServiceImpl implements QuizService {
 
         attempt.setScore(score);
         attempt.setCompletedAt(LocalDateTime.now());
-//        attempt.setTimeTaken(attempt.getStartedAt() - attempt.getCompletedAt());
+
+        Duration timeTaken = Duration.between(attempt.getStartedAt() , attempt.getCompletedAt());
+        attempt.setTimeTaken(timeTaken.getSeconds());
         attemptRepo.save(attempt);
 
         return score.toString();
     }
+
     @Override
     public List<LeaderboardDTO> leaderBoardForQuiz(Integer quizId) {
-        List<Attempt> attempts = attemptRepo.findTop10ByQuiz_IdOrderByScoreDesc(quizId);
+        List<Attempt> attempts = attemptRepo.findTop10ByQuiz_IdOrderByScoreDescTimeTakenAsc(quizId);
 
-        if(attempts.isEmpty()){
+        if (attempts.isEmpty()) {
             throw new RuntimeException("Not enough attempts");
         }
 
         List<LeaderboardDTO> leaderBoard = new ArrayList<>();
 
-        for(Attempt a : attempts){
+        for (Attempt a : attempts) {
             LeaderboardDTO leaderboardDTO = new LeaderboardDTO();
             leaderboardDTO.setScore(a.getScore());
             leaderboardDTO.setQuizId(a.getQuiz().getId());
@@ -185,7 +189,7 @@ public class QuizServiceImpl implements QuizService {
             leaderBoard.add(leaderboardDTO);
         }
 
-        return  leaderBoard;
+        return leaderBoard;
     }
 
 }

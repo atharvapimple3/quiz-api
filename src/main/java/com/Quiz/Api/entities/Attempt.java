@@ -4,6 +4,7 @@ import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class Attempt {
     private LocalDateTime startedAt;
 
     @Column(name = "time_taken")
-    private LocalDateTime timeTaken;
+    private Long timeTaken;
+
 
     @Type(JsonType.class)
     @Column(name = "question_ids", columnDefinition = "json")
@@ -44,7 +46,7 @@ public class Attempt {
 
     }
 
-    public Attempt(int id, User user, Quiz quiz, int score, LocalDateTime completedAt, LocalDateTime startedAt, LocalDateTime timeTaken, List<Integer> questionIds) {
+    public Attempt(int id, User user, Quiz quiz, int score, LocalDateTime completedAt, LocalDateTime startedAt, Long timeTaken, List<Integer> questionIds) {
         this.id = id;
         this.user = user;
         this.quiz = quiz;
@@ -103,11 +105,11 @@ public class Attempt {
         this.startedAt = startedAt;
     }
 
-    public LocalDateTime getTimeTaken() {
+    public Long getTimeTaken() {
         return timeTaken;
     }
 
-    public void setTimeTaken(LocalDateTime timeTaken) {
+    public void setTimeTaken(Long timeTaken) {
         this.timeTaken = timeTaken;
     }
 

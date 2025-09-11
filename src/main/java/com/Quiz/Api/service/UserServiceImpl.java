@@ -110,6 +110,10 @@ public class UserServiceImpl implements UserService {
     public List<AttemptHistoryDto> getUserHistoryOfAttempts(Integer userId) {
         List<Attempt> attempts = attemptRepo.findAllByUser_Id(userId);
 
+        if(attempts.isEmpty()){
+            throw new RuntimeException("No attempts for this user: " + userId);
+        }
+
         List<AttemptHistoryDto> attemptHistoryList = new ArrayList<>();
 
         for (Attempt a : attempts) {

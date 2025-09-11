@@ -1,10 +1,7 @@
 package com.Quiz.Api.controller;
 
 import com.Quiz.Api.dto.LeaderboardDTO;
-import com.Quiz.Api.dto.QuestionDTO;
 import com.Quiz.Api.dto.QuizSubmissionDto;
-import com.Quiz.Api.entities.Attempt;
-import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
 import com.Quiz.Api.service.QuestionService;
 import com.Quiz.Api.service.QuizService;
