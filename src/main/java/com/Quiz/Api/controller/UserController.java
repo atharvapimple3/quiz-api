@@ -36,15 +36,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PostMapping()
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new RuntimeException("Cannot add user");
-        }
-        User savedUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {

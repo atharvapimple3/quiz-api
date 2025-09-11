@@ -8,6 +8,7 @@ import com.Quiz.Api.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,30 +39,34 @@ public class QuizController {
         return ResponseEntity.status(HttpStatus.OK).body(quiz);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping()
     public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
         Quiz newQuiz = quizService.createQuiz(quiz);
         return ResponseEntity.status(HttpStatus.CREATED).body(newQuiz);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Quiz> updateQuiz(@PathVariable Integer id, @RequestBody Quiz quiz) {
         Quiz updatedQuiz = quizService.updateQuiz(id, quiz);
         return ResponseEntity.status(HttpStatus.OK).body(updatedQuiz);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<Quiz> patchQuiz(@PathVariable Integer id, @RequestBody Quiz quiz) {
         Quiz patchQuiz = quizService.patchQuiz(id, quiz);
         return ResponseEntity.status(HttpStatus.OK).body(patchQuiz);
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> deleteQuiz(@PathVariable Integer id) {
         quizService.deleteQuiz(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/restore/{id}")
     public ResponseEntity<Quiz> restoreQuiz(@PathVariable Integer id) {
         quizService.restoreById(id);

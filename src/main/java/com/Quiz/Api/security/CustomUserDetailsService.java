@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<User> optionalUser = userRepo.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority(user.getRole()));
             return new org.springframework.security.core.userdetails.User
                     (user.getEmail(), user.getPassword(), authorities);
         }
