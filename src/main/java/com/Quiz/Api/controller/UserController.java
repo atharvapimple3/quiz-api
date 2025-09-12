@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +25,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userService.getUserById(id);
@@ -39,7 +42,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
-            throw new RuntimeException("Validation failed for user with ID: " + id);
+            throw new IllegalArgumentException("Validation failed for user with ID: " + id);
         }
         User updated = userService.updateUser(id, user);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
@@ -48,7 +51,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<User> patchUser(@PathVariable Integer id, @Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
-            throw new RuntimeException("Validation failed for user with ID: " + id);
+            throw new IllegalArgumentException("Validation failed for user with ID: " + id);
         }
         User patched = userService.patchUser(id, user);
         return ResponseEntity.status(HttpStatus.OK).body(patched);
