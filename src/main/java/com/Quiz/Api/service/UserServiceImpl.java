@@ -29,13 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        log.info("Creating new User with email :{}", user.getEmail());
-        if (userRepo.existsByEmail(user.getEmail())) {
+        log.info("Creating new User with email :{}", user.getEmail().toLowerCase());
+        if (userRepo.existsByEmail(user.getEmail().toLowerCase())) {
             log.warn("Email already exists :{}", user.getEmail());
             throw new RuntimeException("User already exists");
         }
+        user.setEmail(user.getEmail().toLowerCase());
         User newUser = userRepo.save(user);
-        log.info("User save successfully with id: {}", user.getId());
+        log.info("User save successfully with id: {}", newUser.getId());
         return newUser;
     }
 
