@@ -40,13 +40,21 @@ public class Question {
 
     }
 
-    public Question(int id, Quiz quiz, String question, List<String> options, String correctAnswer) {
-        this.id = id;
+    public Question(Quiz quiz, String question, List<String> options, String correctAnswer, boolean isDeleted) {
+//        this.id = id;
         this.quiz = quiz;
         this.question = question;
         this.options = options;
         this.correctAnswer = correctAnswer;
+        this.isDeleted = false;
     }
+//
+//    public Question(String question, List<String> options, String correctAnswer, boolean isDeleted) {
+//        this.question = question;
+//        this.options = options;
+//        this.correctAnswer = correctAnswer;
+//        this.isDeleted = isDeleted;
+//    }
 
     public boolean isDeleted() {
         return isDeleted;

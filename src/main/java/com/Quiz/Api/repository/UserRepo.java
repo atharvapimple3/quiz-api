@@ -27,5 +27,5 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     void restoreById(@Param("id") Integer id);
 
     Optional<User> findByEmail(String email);
-
+    
 }
