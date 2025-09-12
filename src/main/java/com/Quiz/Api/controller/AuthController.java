@@ -4,7 +4,9 @@ import com.Quiz.Api.dto.LoginDto;
 import com.Quiz.Api.dto.ResponseToken;
 import com.Quiz.Api.entities.User;
 import com.Quiz.Api.repository.UserRepo;
+import com.Quiz.Api.security.CustomUserDetailsService;
 import com.Quiz.Api.security.JwtUtils;
+import com.Quiz.Api.security.MyUserDetails;
 import com.Quiz.Api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +49,11 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            User user = userService.findByEmail(loginDto.getEmail());
+            MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
             Map<String, Object> claims = new HashMap<>();
-            claims.put("email", user.getEmail());
-            claims.put("userID", user.getId());
-            claims.put("role", user.getRole());
+            claims.put("email", userDetails.getEmail());
+            claims.put("userID", userDetails.getUserId());
+            claims.put("role", userDetails.getRole());
 
             String token = jwtUtils.generateToken(loginDto.getEmail(), claims);
             ResponseToken responseToken = new ResponseToken(token);

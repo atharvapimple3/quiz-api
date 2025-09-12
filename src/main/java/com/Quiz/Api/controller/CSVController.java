@@ -19,7 +19,7 @@ public class CSVController {
         this.csvService = csvService;
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/upload/{quizId}")
     public ResponseEntity<String> uploadFile(@RequestParam("file")MultipartFile multipartFile, @PathVariable Integer quizId){
         try {

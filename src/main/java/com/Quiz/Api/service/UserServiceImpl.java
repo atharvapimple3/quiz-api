@@ -3,6 +3,9 @@ package com.Quiz.Api.service;
 import com.Quiz.Api.dto.AttemptHistoryDto;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.User;
+import com.Quiz.Api.exceptions.AttemptNotFoundException;
+import com.Quiz.Api.exceptions.UserAlreadyExistsException;
+import com.Quiz.Api.exceptions.UserNotFoundException;
 import com.Quiz.Api.repository.AttemptRepo;
 import com.Quiz.Api.repository.UserRepo;
 import org.slf4j.Logger;
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
         log.info("Creating new User with email :{}", user.getEmail().toLowerCase());
         if (userRepo.existsByEmail(user.getEmail().toLowerCase())) {
             log.warn("Email already exists :{}", user.getEmail());
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists");
         }
         user.setEmail(user.getEmail().toLowerCase());
         User newUser = userRepo.save(user);
@@ -52,7 +55,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer id) {
         log.info("Getting user with ID: {}", id);
         return userRepo.findByIdAndIsDeletedFalse(id).orElseThrow(() ->
-                new RuntimeException("No user with ID :" + id));
+                new UserNotFoundException("No user with ID :" + id));
     }
 
     @Override
@@ -60,7 +63,7 @@ public class UserServiceImpl implements UserService {
         log.info("Updating User with ID :{}", id);
         User existingUser = userRepo.findById(id).orElseThrow(() -> {
             log.warn("User not found with ID: {}", id);
-            return new RuntimeException("User not found with ID: " + id);
+            return new UserNotFoundException("User not found with ID: " + id);
         });
         existingUser.setName(user.getName());
         existingUser.setEmail(user.getEmail());
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) {
-        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found with ID :" + id));
+        User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with ID :" + id));
         user.setIsDeleted(true);
         userRepo.save(user);
     }
@@ -82,7 +85,7 @@ public class UserServiceImpl implements UserService {
         log.info("Patching user with ID: {}", id);
         User existing = userRepo.findById(id).orElseThrow(() -> {
             log.warn("User not found with ID :{}", id);
-            return new RuntimeException("User not found with ID:" + id);
+            return new UserNotFoundException("User not found with ID:" + id);
         });
         if (user.getName() != null) {
             existing.setName(user.getName());
@@ -102,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void restoreById(Integer id) {
         User user = userRepo.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("User not found with ID: " + id);
+            throw new UserNotFoundException("User not found with ID: " + id);
         });
         userRepo.restoreById(id);
     }
@@ -112,7 +115,7 @@ public class UserServiceImpl implements UserService {
         List<Attempt> attempts = attemptRepo.findAllByUser_Id(userId);
 
         if(attempts.isEmpty()){
-            throw new RuntimeException("No attempts for this user: " + userId);
+            throw new AttemptNotFoundException("No attempts for this user: " + userId);
         }
 
         List<AttemptHistoryDto> attemptHistoryList = new ArrayList<>();
@@ -133,7 +136,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User findByEmail(String email){
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found "));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found "));
         return user;
     }
 
