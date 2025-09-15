@@ -3,6 +3,7 @@ package com.Quiz.Api.controller;
 import com.Quiz.Api.dto.AttemptHistoryDto;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.User;
+import com.Quiz.Api.service.AttemptService;
 import com.Quiz.Api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AttemptService attemptService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AttemptService attemptService) {
         this.userService = userService;
+        this.attemptService = attemptService;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -71,7 +74,7 @@ public class UserController {
 
     @GetMapping("/history/{userId}")
     public ResponseEntity<List<AttemptHistoryDto>> getUserAttempts(@PathVariable Integer userId){
-        List<AttemptHistoryDto> attemptsByUser = userService.getUserHistoryOfAttempts(userId);
+        List<AttemptHistoryDto> attemptsByUser = attemptService.attemptHistory(userId);
         return ResponseEntity.status(HttpStatus.OK).body(attemptsByUser);
     }
 

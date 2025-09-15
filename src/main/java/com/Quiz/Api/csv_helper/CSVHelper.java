@@ -66,7 +66,6 @@ public class CSVHelper {
 
 
                 Question question = new Question(
-//                        Integer.parseInt(record.get("id")),
                         quiz,
                         record.get("question"),
                         options,

@@ -2,22 +2,21 @@ package com.Quiz.Api.service;
 
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.repository.QuestionRepo;
-import com.Quiz.Api.repository.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
     QuestionRepo questionRepo;
-    QuizRepo quizRepo;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepo questionRepo, QuizRepo quizRepo) {
+    public QuestionServiceImpl(QuestionRepo questionRepo) {
         this.questionRepo = questionRepo;
-        this.quizRepo = quizRepo;
     }
 
     @Override
@@ -79,4 +78,18 @@ public class QuestionServiceImpl implements QuestionService {
         question.setDeleted(true);
         questionRepo.save(question);
     }
+
+    @Override
+    public List<Question> getRandomQuestionsById(Integer quizId) {
+        return questionRepo.randomQuestionsByQuizId(quizId);
+    }
+
+    @Override
+    public Map<Integer, Question> getQuestionByIds(List<Integer> ids) {
+        return questionRepo.findAllById(ids)
+                .stream()
+                .collect(Collectors.toMap(Question::getId, q -> q));
+    }
+
+
 }

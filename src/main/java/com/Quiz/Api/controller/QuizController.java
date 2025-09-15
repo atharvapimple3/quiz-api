@@ -1,16 +1,23 @@
 package com.Quiz.Api.controller;
 
 import com.Quiz.Api.dto.LeaderboardDto;
+import com.Quiz.Api.dto.QuestionDto;
 import com.Quiz.Api.dto.QuizSubmissionDto;
+import com.Quiz.Api.entities.Attempt;
+import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
+import com.Quiz.Api.security.MyUserDetails;
+import com.Quiz.Api.service.AttemptService;
 import com.Quiz.Api.service.QuestionService;
 import com.Quiz.Api.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +27,13 @@ public class QuizController {
 
     QuizService quizService;
     QuestionService questionService;
+    AttemptService attemptService;
 
     @Autowired
-    public QuizController(QuizService quizService, QuestionService questionService) {
+    public QuizController(QuizService quizService, QuestionService questionService, AttemptService attemptService) {
         this.quizService = quizService;
         this.questionService = questionService;
+        this.attemptService = attemptService;
     }
 
     @GetMapping()
@@ -59,6 +68,7 @@ public class QuizController {
         Quiz patchQuiz = quizService.patchQuiz(id, quiz);
         return ResponseEntity.status(HttpStatus.OK).body(patchQuiz);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> deleteQuiz(@PathVariable Integer id) {
@@ -74,31 +84,31 @@ public class QuizController {
     }
 
     @GetMapping("/{quizId}/start")
-    public ResponseEntity<Map<String, Object>> getQuestionsForQuiz(@PathVariable Integer quizId) {
-        Map<String, Object> quiz = quizService.startQuiz(quizId);
-        return ResponseEntity.status(HttpStatus.OK).body(quiz);
+    public ResponseEntity<Map<String, Object>> startQuiz(@PathVariable Integer quizId, @AuthenticationPrincipal MyUserDetails details) {
+
+        Quiz quiz = quizService.getQuizById(quizId);
+        List<Question> questions = questionService.getRandomQuestionsById(quizId);
+
+        Attempt attempt = attemptService.createAttempt(details.getUserId(), quiz, questions);
+
+        List<QuestionDto> dto = questions.stream()
+                .map(q -> new QuestionDto(q.getId(), q.getQuestion(), q.getOptions()))
+                .toList();
+
+        Map<String, Object> startQuiz = new HashMap<>();
+        startQuiz.put("attemptId", attempt.getId());
+        startQuiz.put("questions", dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(startQuiz);
     }
 
-//    @GetMapping("/{quizId}/start/{index}")
-//    public ResponseEntity<Question> getOneQuestion(@PathVariable Integer quizId, @PathVariable Integer index) {
-//
-//        List<Question> questions = questionService.getRandomQuestionsForQuiz(quizId);
-//
-//        Question currentQuestion = questionService.getOneQuestion(questions, index);
-//        return ResponseEntity.status(HttpStatus.OK).body(currentQuestion);
-//    }
-
     @PostMapping("/{quizId}/submit/{attemptId}")
-    public ResponseEntity<String> quizSubmission(@RequestBody QuizSubmissionDto quizSubmissionDto, @PathVariable Integer attemptId) {
-        String score = quizService.submitQuiz(quizSubmissionDto, attemptId);
-        return ResponseEntity.status(HttpStatus.OK).body(score);
+    public ResponseEntity<Integer> quizSubmission(@RequestBody QuizSubmissionDto quizSubmissionDto, @PathVariable Integer attemptId) {
+        return ResponseEntity.status(HttpStatus.OK).body(attemptService.submitQuiz(quizSubmissionDto, attemptId));
     }
 
     @GetMapping("/leader-board/{quizId}")
-    public ResponseEntity<List<LeaderboardDto>> getLeaderboardForQuiz(@PathVariable Integer quizId){
-        List<LeaderboardDto> leaderboard = quizService.leaderBoardForQuiz(quizId);
-        return ResponseEntity.status(HttpStatus.OK).body(leaderboard);
+    public ResponseEntity<List<LeaderboardDto>> getLeaderboardForQuiz(@PathVariable Integer quizId) {
+        return ResponseEntity.status(HttpStatus.OK).body(attemptService.getLeaderboard(quizId));
     }
-
-
 }

@@ -22,8 +22,6 @@ public interface UserService {
 
     void restoreById(Integer id);
 
-    List<AttemptHistoryDto> getUserHistoryOfAttempts(Integer userId);
-
     User findByEmail(String email);
 
 }
