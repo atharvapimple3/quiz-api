@@ -23,13 +23,4 @@ public interface QuizService {
     Quiz getQuizById(Integer id);
 
     void restoreById(Integer id);
-
-    Question getOneQuestion(List<Integer> randomQuestionsByIndex, Integer index);
-
-    String submitQuiz(QuizSubmissionDto quizSubmissionDto, Integer attemptId);
-
-    Map<String, Object> startQuiz(Integer quizId);
-
-    List<LeaderboardDto> leaderBoardForQuiz(Integer quizId);
-
 }

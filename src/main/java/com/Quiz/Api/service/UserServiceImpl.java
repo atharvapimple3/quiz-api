@@ -1,33 +1,25 @@
 package com.Quiz.Api.service;
 
-import com.Quiz.Api.dto.AttemptHistoryDto;
-import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.User;
-import com.Quiz.Api.exceptions.AttemptNotFoundException;
 import com.Quiz.Api.exceptions.UserAlreadyExistsException;
 import com.Quiz.Api.exceptions.UserNotFoundException;
-import com.Quiz.Api.repository.AttemptRepo;
 import com.Quiz.Api.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     UserRepo userRepo;
-    AttemptRepo attemptRepo;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, AttemptRepo attemptRepo) {
+    public UserServiceImpl(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.attemptRepo = attemptRepo;
     }
 
     @Override
@@ -110,30 +102,6 @@ public class UserServiceImpl implements UserService {
         userRepo.restoreById(id);
     }
 
-    @Override
-    public List<AttemptHistoryDto> getUserHistoryOfAttempts(Integer userId) {
-        List<Attempt> attempts = attemptRepo.findAllByUser_Id(userId);
-
-        if(attempts.isEmpty()){
-            throw new AttemptNotFoundException("No attempts for this user: " + userId);
-        }
-
-        List<AttemptHistoryDto> attemptHistoryList = new ArrayList<>();
-
-        for (Attempt a : attempts) {
-            AttemptHistoryDto attemptHistoryDto = new AttemptHistoryDto();
-            attemptHistoryDto.setUserId(a.getUser().getId());
-            attemptHistoryDto.setTitle(a.getQuiz().getTitle());
-            attemptHistoryDto.setScore(a.getScore());
-            attemptHistoryDto.setName(a.getUser().getName());
-            attemptHistoryDto.setStartedAt(a.getStartedAt());
-            attemptHistoryDto.setCompletedAt(a.getCompletedAt());
-
-            attemptHistoryList.add(attemptHistoryDto);
-        }
-
-        return attemptHistoryList;
-    }
     @Override
     public User findByEmail(String email){
         User user = userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found "));
