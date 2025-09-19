@@ -63,4 +63,11 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/{quizId}/quiz")
+    public ResponseEntity<List<Question>> getQuestionsById(@PathVariable Integer quizId){
+        List<Question> questions = questionService.getQuestionsByQuizId(quizId);
+        return ResponseEntity.status(HttpStatus.OK).body(questions);
+    }
+
 }

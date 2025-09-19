@@ -3,7 +3,6 @@ package com.Quiz.Api.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -17,15 +16,17 @@ public class User {
 
     @Column(name = "name")
     @Pattern(regexp = "^[a-zA-Z ]+$")
-    @NotBlank   (message = "Name cannot be empty")
+    @NotBlank (message = "Name cannot be empty")
     private String name;
 
     @Column(name = "email")
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
 
     @Column(name = "password")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$")
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 
     @Column(name = "is_deleted")

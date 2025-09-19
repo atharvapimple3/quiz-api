@@ -30,7 +30,7 @@ public class CSVHelper {
     }
 
     public String format = "text/csv";
-    String[] headers = {"id", "quiz", "question", "options", "correctAnswer", "isDeleted"};
+    String[] headers = {"quiz", "question", "options", "correctAnswer", "isDeleted"};
 
 
     public boolean isCsvFormat(MultipartFile multipartFile) {
@@ -47,6 +47,11 @@ public class CSVHelper {
                      .withIgnoreHeaderCase()
                      .withAllowMissingColumnNames()
                      .withTrim());) {
+
+            List<String> requiredHeaders = List.of(headers);
+            if (!csvParser.getHeaderMap().keySet().containsAll(requiredHeaders)) {
+                throw new IllegalArgumentException("CSV headers do not match required format. Required: " + requiredHeaders);
+            }
 
 
             List<Question> questions = new ArrayList<>();

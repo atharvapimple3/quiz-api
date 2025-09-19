@@ -23,4 +23,6 @@ public interface QuestionService {
 
     Map<Integer, Question> getQuestionByIds(List<Integer> ids);
 
+    List<Question> getQuestionsByQuizId(Integer quizId);
+
 }

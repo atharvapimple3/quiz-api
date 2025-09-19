@@ -75,4 +75,9 @@ public class QuizServiceImpl implements QuizService {
         quizRepo.restoreById(id);
     }
 
+    @Override
+    public List<Quiz> findQuizWith10Questions() {
+        return quizRepo.findQuizWithAtleast10Questions();
+    }
+
 }
