@@ -1,6 +1,7 @@
 package com.Quiz.Api.service;
 
 import com.Quiz.Api.entities.Question;
+import com.Quiz.Api.exceptions.QuestionNotFoundException;
 import com.Quiz.Api.repository.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,6 +90,16 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepo.findAllById(ids)
                 .stream()
                 .collect(Collectors.toMap(Question::getId, q -> q));
+    }
+
+    @Override
+    public List<Question> getQuestionsByQuizId(Integer quizId) {
+        List<Question> questions = questionRepo.getQuestionsByQuizId(quizId);
+
+        if(questions.isEmpty()){
+            throw new QuestionNotFoundException("No questions for quiz ID : " + quizId);
+        }
+        return questions;
     }
 
 

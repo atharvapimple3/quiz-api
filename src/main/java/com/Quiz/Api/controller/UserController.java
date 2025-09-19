@@ -35,7 +35,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         User user = userService.getUserById(id);

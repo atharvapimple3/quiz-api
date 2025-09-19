@@ -1,12 +1,10 @@
 package com.Quiz.Api.service;
 
-import com.Quiz.Api.dto.AttemptHistoryDto;
-import com.Quiz.Api.dto.LeaderboardDto;
-import com.Quiz.Api.dto.PopularQuizDto;
-import com.Quiz.Api.dto.QuizSubmissionDto;
+import com.Quiz.Api.dto.*;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
+import com.Quiz.Api.entities.User;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ public interface AttemptService {
 
     PopularQuizDto popularQuiz();
 
-    Attempt createAttempt(Integer userId, Quiz quiz, List<Question> questions);
+    Attempt createAttempt(User user, Quiz quiz, List<Question> questions);
 
     Integer submitQuiz(QuizSubmissionDto submissionDto, Integer attemptId);
 

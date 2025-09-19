@@ -19,5 +19,6 @@ public interface QuestionRepo extends JpaRepository<Question, Integer> {
     @Query(value = "Select * from question where quiz_id = :quizId and is_deleted = false order by rand() limit 10", nativeQuery = true)
     List<Question> randomQuestionsByQuizId(Integer quizId);
 
-    List<Integer> findQuestionIdsByQuizId(Integer quizId);
+    @Query(value = "Select q from Question q where q.quiz.id = :quizId and q.isDeleted = false")
+    List<Question> getQuestionsByQuizId(Integer quizId);
 }

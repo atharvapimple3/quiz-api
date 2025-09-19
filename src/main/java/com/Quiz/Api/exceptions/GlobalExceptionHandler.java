@@ -61,5 +61,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(QuestionNotFoundException.class)
+    public ResponseEntity<Object> handleQuestionNotFound(QuestionNotFoundException e, HttpServletRequest request){
+        return new ResponseEntity<>(buildErrorDetails(
+                e.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                request.getRequestURI()),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
 
 }

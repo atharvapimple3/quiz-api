@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,25 +47,33 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@RequestBody LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+        loginDto.setEmail(loginDto.getEmail().toLowerCase());
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail().toLowerCase(), loginDto.getPassword()));
 
-        if (authentication.isAuthenticated()) {
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
             Map<String, Object> claims = new HashMap<>();
             claims.put("email", userDetails.getEmail());
             claims.put("userID", userDetails.getUserId());
             claims.put("role", userDetails.getRole());
 
+            System.out.println(claims);
+
             String token = jwtUtils.generateToken(loginDto.getEmail(), claims);
             ResponseToken responseToken = new ResponseToken(token);
             return ResponseEntity.status(HttpStatus.OK).body(responseToken);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        catch (BadCredentialsException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User user, BindingResult result) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             throw new IllegalArgumentException("Invalid data");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));

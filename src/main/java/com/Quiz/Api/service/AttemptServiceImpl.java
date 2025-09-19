@@ -4,6 +4,7 @@ import com.Quiz.Api.dto.*;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
+import com.Quiz.Api.entities.User;
 import com.Quiz.Api.exceptions.AttemptNotFoundException;
 import com.Quiz.Api.repository.AttemptRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class AttemptServiceImpl implements AttemptService {
     }
 
     @Override
-    public Attempt createAttempt(Integer userId, Quiz quiz, List<Question> questions) {
+    public Attempt createAttempt(User user, Quiz quiz, List<Question> questions) {
         Attempt attempt = new Attempt();
 
         attempt.setQuestionIds(questions.stream()
@@ -48,7 +49,7 @@ public class AttemptServiceImpl implements AttemptService {
 
         attempt.setStartedAt(LocalDateTime.now());
         attempt.setQuiz(quiz);
-//        attempt.setUser();
+        attempt.setUser(user);
         attemptRepo.save(attempt);
 
         return attempt;
@@ -58,6 +59,13 @@ public class AttemptServiceImpl implements AttemptService {
     public Integer submitQuiz(QuizSubmissionDto submissionDto, Integer attemptId) {
         Attempt attempt = attemptRepo.findById(attemptId)
                 .orElseThrow(() -> new AttemptNotFoundException("Attempt not found"));
+
+        final long TIME_LIMIT_SECONDS = 600;
+
+        long testTime = Duration.between(attempt.getStartedAt(), LocalDateTime.now()).getSeconds();
+        if(testTime > TIME_LIMIT_SECONDS){
+            throw new RuntimeException("Time limited exceeded");
+        }
 
         List<Integer> allowedQuestions = attempt.getQuestionIds();
 

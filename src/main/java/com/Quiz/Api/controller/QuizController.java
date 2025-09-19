@@ -6,10 +6,12 @@ import com.Quiz.Api.dto.QuizSubmissionDto;
 import com.Quiz.Api.entities.Attempt;
 import com.Quiz.Api.entities.Question;
 import com.Quiz.Api.entities.Quiz;
+import com.Quiz.Api.entities.User;
 import com.Quiz.Api.security.MyUserDetails;
 import com.Quiz.Api.service.AttemptService;
 import com.Quiz.Api.service.QuestionService;
 import com.Quiz.Api.service.QuizService;
+import com.Quiz.Api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,12 @@ public class QuizController {
     QuizService quizService;
     QuestionService questionService;
     AttemptService attemptService;
+    UserService userService;
 
     @Autowired
-    public QuizController(QuizService quizService, QuestionService questionService, AttemptService attemptService) {
+    public QuizController(QuizService quizService, QuestionService questionService, AttemptService attemptService,UserService userService) {
         this.quizService = quizService;
+        this.userService = userService;
         this.questionService = questionService;
         this.attemptService = attemptService;
     }
@@ -68,7 +72,6 @@ public class QuizController {
         Quiz patchQuiz = quizService.patchQuiz(id, quiz);
         return ResponseEntity.status(HttpStatus.OK).body(patchQuiz);
     }
-
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Quiz> deleteQuiz(@PathVariable Integer id) {
@@ -87,9 +90,10 @@ public class QuizController {
     public ResponseEntity<Map<String, Object>> startQuiz(@PathVariable Integer quizId, @AuthenticationPrincipal MyUserDetails details) {
 
         Quiz quiz = quizService.getQuizById(quizId);
+        User user =userService.getUserById(details.getUserId());
         List<Question> questions = questionService.getRandomQuestionsById(quizId);
 
-        Attempt attempt = attemptService.createAttempt(details.getUserId(), quiz, questions);
+        Attempt attempt = attemptService.createAttempt(user, quiz, questions);
 
         List<QuestionDto> dto = questions.stream()
                 .map(q -> new QuestionDto(q.getId(), q.getQuestion(), q.getOptions()))
@@ -110,5 +114,9 @@ public class QuizController {
     @GetMapping("/leader-board/{quizId}")
     public ResponseEntity<List<LeaderboardDto>> getLeaderboardForQuiz(@PathVariable Integer quizId) {
         return ResponseEntity.status(HttpStatus.OK).body(attemptService.getLeaderboard(quizId));
+    }
+    @GetMapping("/home")
+    public ResponseEntity<List<Quiz>> getQuizWith10Questions(){
+        return ResponseEntity.status(HttpStatus.OK).body(quizService.findQuizWith10Questions());
     }
 }
